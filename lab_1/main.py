@@ -68,7 +68,7 @@ def filter_stop_words(frequencies: dict, stop_words: tuple) -> dict:
     filtered_dictionary = {}
     for word in frequencies:
         if type(word) != str:
-            continue
+            del frequencies[word]
         if word not in stop_words:
             filtered_dictionary[word] = frequencies[word]
     return filtered_dictionary
@@ -117,6 +117,6 @@ def write_to_file(path_to_file: str, content: tuple):
 # word_frequencies = calculate_frequencies(read_from_file(path_to_input_file, 400))
 word_frequencies = calculate_frequences(test_text)
 filtered_frequencies = filter_stop_words(word_frequencies, user_stop_words)
-result = get_top_n(filtered_frequencies, 60)
+result = get_top_n(filtered_frequencies, 10)
 # write_to_file(path_to_output_file, result)
 print(result)
