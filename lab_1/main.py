@@ -4,7 +4,7 @@ Count frequencies dictionary by the given arbitrary text
 """
 
 
-user_stop_words = ('of', 'to', 'a', 'and')
+user_stop_words = ('of', 'to', 'a', 'and', 'of')
 # path_to_input_file = '../data.txt'
 # path_to_output_file = '../report.txt'
 punctuation = '!"#$%&\'()*+,-./:;<=>?@[]\\^_`{|}~'
