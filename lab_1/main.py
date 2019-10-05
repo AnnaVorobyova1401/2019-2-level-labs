@@ -68,7 +68,7 @@ def filter_stop_words(frequencies: dict, stop_words: tuple) -> dict:
     filtered_dictionary = {}
     for word in frequencies:
         if type(word) != str:
-            del frequencies[word]
+            continue
         if word not in stop_words:
             filtered_dictionary[word] = frequencies[word]
     return filtered_dictionary
