@@ -4,7 +4,7 @@ Count frequencies dictionary by the given arbitrary text
 """
 
 
-s_words = ('of', 'to', 'a', 'and')
+user_stop_words = ('of', 'to', 'a', 'and')
 # path_to_input_file = '../data.txt'
 # path_to_output_file = '../report.txt'
 punctuation = '!"#$%&\'()*+,-./:;<=>?@[]\\^_`{|}~'
@@ -116,7 +116,7 @@ def write_to_file(path_to_file: str, content: tuple):
 
 # word_frequencies = calculate_frequencies(read_from_file(path_to_input_file, 400))
 word_frequencies = calculate_frequences(test_text)
-filtered_frequencies = filter_stop_words(word_frequencies, s_words)
+filtered_frequencies = filter_stop_words(word_frequencies, user_stop_words)
 result = get_top_n(filtered_frequencies, 60)
 # write_to_file(path_to_output_file, result)
 print(result)
