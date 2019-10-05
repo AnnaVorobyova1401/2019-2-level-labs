@@ -10,7 +10,7 @@ path_to_output_file = '../report.txt'
 punctuation = '!"#$%&\'()*+,-./:;<=>?@[]\\^_`{|}~'
 
 
-def calculate_frequencies(text: str) -> dict:
+def calculate_frequences(text: str) -> dict:
     """
     Calculates number of times each word appears in the text
     """
@@ -95,7 +95,7 @@ def write_to_file(path_to_file: str, content: tuple):
             file_output.write(item + '\n')
 
 
-word_frequencies = calculate_frequencies(read_from_file(path_to_input_file, 400))
+word_frequencies = calculate_frequences(read_from_file(path_to_input_file, 400))
 filtered_frequencies = filter_stop_words(word_frequencies, s_words)
 result = get_top_n(filtered_frequencies, 60)
 write_to_file(path_to_output_file, result)
