@@ -27,7 +27,7 @@ potential it must be linked into a single global
 system.'''
 
 
-def calculate_frequencies(text: str) -> dict:
+def calculate_frequences(text: str) -> dict:
     """
     Calculates number of times each word appears in the text
     """
@@ -113,7 +113,7 @@ def write_to_file(path_to_file: str, content: tuple):
 
 
 # word_frequencies = calculate_frequencies(read_from_file(path_to_input_file, 400))
-word_frequencies = calculate_frequencies(test_text)
+word_frequencies = calculate_frequences(test_text)
 filtered_frequencies = filter_stop_words(word_frequencies, s_words)
 result = get_top_n(filtered_frequencies, 60)
 # write_to_file(path_to_output_file, result)
