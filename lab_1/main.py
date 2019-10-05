@@ -5,12 +5,29 @@ Count frequencies dictionary by the given arbitrary text
 
 
 s_words = ('of', 'to', 'a', 'and')
-path_to_input_file = '../data.txt'
-path_to_output_file = '../report.txt'
+# path_to_input_file = '../data.txt'
+# path_to_output_file = '../report.txt'
 punctuation = '!"#$%&\'()*+,-./:;<=>?@[]\\^_`{|}~'
 
 
-def calculate_frequences(text: str) -> dict:
+test_text = '''Knowledge Representation
+For the semantic's web-to-function, computers must
+have access to structured collections of information
+and sets of inference rules that they can use to
+conduct automated reasoning. Artificial-intelligence
+researchers have studied such systems since long
+before the Web was developed. Knowledge
+representation, as this technology is often called, is
+currently in a state comparable to that of hypertext
+before the advent of the Web: it is clearly a good
+idea, and some very nice demonstrations exist, but
+it has not yet changed the world. It contains the
+seeds of important applications, but to realize its full
+potential it must be linked into a single global
+system.'''
+
+
+def calculate_frequencies(text: str) -> dict:
     """
     Calculates number of times each word appears in the text
     """
@@ -95,7 +112,9 @@ def write_to_file(path_to_file: str, content: tuple):
             file_output.write(item + '\n')
 
 
-word_frequencies = calculate_frequences(read_from_file(path_to_input_file, 400))
+# word_frequencies = calculate_frequencies(read_from_file(path_to_input_file, 400))
+word_frequencies = calculate_frequencies(test_text)
 filtered_frequencies = filter_stop_words(word_frequencies, s_words)
 result = get_top_n(filtered_frequencies, 60)
-write_to_file(path_to_output_file, result)
+# write_to_file(path_to_output_file, result)
+print(result)
