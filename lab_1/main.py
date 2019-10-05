@@ -67,6 +67,8 @@ def filter_stop_words(frequencies: dict, stop_words: tuple) -> dict:
         return {}
     filtered_dictionary = {}
     for word in frequencies:
+        if type(word) != str:
+            continue
         if word not in stop_words:
             filtered_dictionary[word] = frequencies[word]
     return filtered_dictionary
@@ -86,8 +88,8 @@ def get_top_n(frequencies: dict, top_n: int) -> tuple:
     if top_n > len(frequencies):
         top_n = len(frequencies)
     n_popular = ()
-    ordered_frequencies = sorted(frequencies.items())
-    ordered_frequencies = sorted(ordered_frequencies, key=lambda word_freq: word_freq[1], reverse=True)
+    # ordered_frequencies = sorted(frequencies.items())
+    ordered_frequencies = sorted(frequencies.items(), key=lambda word_freq: word_freq[1], reverse=True)
     for word_number in range(top_n):
         n_popular += ordered_frequencies[word_number][0],
     return n_popular
