@@ -1,17 +1,3 @@
-lines_limit = 3
-path_to_file = open('data.txt', 'r')
-
-
-def read_from_file(path_to_file, lines_limit):
-    for line in path_to_file:
-        if lines_limit == 0:
-            break
-        else:
-            lines_limit -= 1
-            return line
-
-
-
 text = ''
 freq_dict = {}
 
