@@ -13,12 +13,12 @@ def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
     if not isinstance(num_rows, int):
         try:
             num_rows = int(num_rows)
-        except TypeError:
+        except TypeError or ValueError:
             num_rows = 0
     if not isinstance(num_cols, int):
         try:
             num_cols = int(num_cols)
-        except TypeError:
+        except TypeError or ValueError:
             num_cols = 0
     if num_rows < 1 or num_cols < 1:
         return []
@@ -30,12 +30,12 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
     if not isinstance(add_weight, int):
         try:
             add_weight = int(add_weight)
-        except TypeError:
+        except TypeError or ValueError:
             add_weight = 0
     if not isinstance(remove_weight, int):
         try:
             remove_weight = int(remove_weight)
-        except TypeError:
+        except TypeError or ValueError:
             remove_weight = 0
     result_matrix = list(edit_matrix)
     result_matrix[0][0] = 0
@@ -165,5 +165,5 @@ def describe_edits(edit_matrix: tuple,
 
 
 print(find_distance(word1, word2, add_val, rem_val, sub_val))
-edited_matrix = tuple(load_from_csv(path_to_csv_file))
-print(describe_edits(edited_matrix, word1, word2, add_val, rem_val, sub_val))
+# edited_matrix = tuple(load_from_csv(path_to_csv_file))
+# print(describe_edits(edited_matrix, word1, word2, add_val, rem_val, sub_val))
