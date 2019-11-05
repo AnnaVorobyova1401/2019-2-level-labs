@@ -10,12 +10,12 @@ path_to_csv_file = '../matrix.csv'
 
 
 def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
-    if not isinstance(num_rows, int):
+    if not type(num_rows) == int:
         try:
             num_rows = int(num_rows)
         except TypeError or ValueError:
             num_rows = 0
-    if not isinstance(num_cols, int):
+    if not type(num_cols) == int:
         try:
             num_cols = int(num_cols)
         except TypeError or ValueError:
@@ -27,12 +27,12 @@ def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
 
 
 def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: int) -> list:
-    if not isinstance(add_weight, int):
+    if not type(add_weight) == int:
         try:
             add_weight = int(add_weight)
         except TypeError or ValueError:
             add_weight = 0
-    if not isinstance(remove_weight, int):
+    if not type(remove_weight) == int:
         try:
             remove_weight = int(remove_weight)
         except TypeError or ValueError:
@@ -65,7 +65,7 @@ def fill_edit_matrix(edit_matrix: tuple,
     result_matrix = list(edit_matrix)
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return result_matrix
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value(tuple((add_weight, remove_weight, substitute_weight))) < 0:
         return result_matrix
     elif len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
         return result_matrix
@@ -89,7 +89,7 @@ def find_distance(original_word: str,
                   substitute_weight: int) -> int:
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return -1
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value(tuple((add_weight, remove_weight, substitute_weight))) < 0:
         return -1
     i, j = len(original_word), len(target_word)
     matrix = generate_edit_matrix(i + 1, j + 1)
@@ -131,7 +131,7 @@ def describe_edits(edit_matrix: tuple,
     description = []
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return description
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value(tuple((add_weight, remove_weight, substitute_weight))) < 0:
         return description
     elif len(edit_matrix) != (len(original_word) + 1) or len(edit_matrix[0]) != (len(target_word) + 1):
         return description
