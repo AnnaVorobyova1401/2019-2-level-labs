@@ -4,8 +4,8 @@ Labour work #2. Levenshtein distance.
 word1 = 'death'
 word2 = 'life'
 add_val = 1
-rem_val = 2
-sub_val = 4
+rem_val = 1
+sub_val = 2
 path_to_csv_file = '../matrix.csv'
 
 
