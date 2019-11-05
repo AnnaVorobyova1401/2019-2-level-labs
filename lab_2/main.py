@@ -38,7 +38,7 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
         except TypeError or ValueError:
             remove_weight = 0
     result_matrix = list(edit_matrix)
-    if result_matrix == [] or result_matrix[] == []:
+    if result_matrix == [] or result_matrix[0] == []:
         return []
     result_matrix[0][0] = 0
     for i in range(1, len(result_matrix)):
