@@ -13,12 +13,12 @@ def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
     if not isinstance(num_rows, int):
         try:
             num_rows = int(num_rows)
-        except ValueError:
+        except TypeError or ValueError:
             num_rows = 0
     if not isinstance(num_cols, int):
         try:
             num_cols = int(num_cols)
-        except ValueError:
+        except TypeError or ValueError:
             num_cols = 0
     if num_rows < 1 or num_cols < 1:
         return []
@@ -30,15 +30,15 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
     if not isinstance(add_weight, int):
         try:
             add_weight = int(add_weight)
-        except ValueError:
+        except TypeError or ValueError:
             add_weight = 0
     if not isinstance(remove_weight, int):
         try:
             remove_weight = int(remove_weight)
-        except ValueError:
+        except TypeError or ValueError:
             remove_weight = 0
     result_matrix = list(edit_matrix)
-    if not result_matrix:
+    if result_matrix == [] or result_matrix[] == []:
         return []
     result_matrix[0][0] = 0
     for i in range(1, len(result_matrix)):
@@ -48,7 +48,7 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
     return result_matrix
 
 
-def minimum_func(numbers: tuple) -> int:
+def minimum_value(numbers: tuple) -> int:
     numbers = list(numbers)
     for i in range(len(numbers)):
         if not isinstance(numbers[i], int):
@@ -65,18 +65,18 @@ def fill_edit_matrix(edit_matrix: tuple,
     result_matrix = list(edit_matrix)
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return result_matrix
-    elif minimum_func((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
         return result_matrix
     elif len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
         return result_matrix
     for i in range(1, len(result_matrix)):
         for j in range(1, len(result_matrix[0])):
             if original_word[i - 1] != target_word[j - 1]:
-                result_matrix[i][j] = minimum_func((result_matrix[i - 1][j] + remove_weight,
+                result_matrix[i][j] = minimum_value((result_matrix[i - 1][j] + remove_weight,
                                                     result_matrix[i][j - 1] + add_weight,
                                                     result_matrix[i - 1][j - 1] + substitute_weight))
             else:
-                result_matrix[i][j] = minimum_func((result_matrix[i - 1][j] + remove_weight,
+                result_matrix[i][j] = minimum_value((result_matrix[i - 1][j] + remove_weight,
                                                     result_matrix[i][j - 1] + add_weight,
                                                     result_matrix[i - 1][j - 1]))
     return result_matrix
@@ -89,7 +89,7 @@ def find_distance(original_word: str,
                   substitute_weight: int) -> int:
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return -1
-    elif minimum_func((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
         return -1
     i, j = len(original_word), len(target_word)
     matrix = generate_edit_matrix(i + 1, j + 1)
@@ -131,7 +131,7 @@ def describe_edits(edit_matrix: tuple,
     description = []
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return description
-    elif minimum_func((add_weight, remove_weight, substitute_weight)) < 0:
+    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
         return description
     elif len(edit_matrix) != (len(original_word) + 1) or len(edit_matrix[0]) != (len(target_word) + 1):
         return description
