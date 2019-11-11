@@ -53,7 +53,11 @@ def fill_edit_matrix(edit_matrix: tuple,
     result_matrix = list(edit_matrix)
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return result_matrix
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    elif not isinstance(add_weight, int) or add_weight < 0:
+        return result_matrix
+    elif not isinstance(remove_weight, int) or remove_weight < 0:
+        return result_matrix
+    elif not isinstance(substitute_weight, int) or substitute_weight < 0:
         return result_matrix
     elif len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
         return result_matrix
