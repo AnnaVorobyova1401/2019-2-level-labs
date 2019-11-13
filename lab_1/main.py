@@ -4,29 +4,6 @@ Count frequencies dictionary by the given arbitrary text
 """
 
 
-user_stop_words = ('of', 'to', 'a', 'and', 'of')
-# path_to_input_file = '../data.txt'
-# path_to_output_file = '../report.txt'
-punctuation = '!"#$%&\'()*+,-./:;<=>?@[]\\^_`{|}~'
-
-
-test_text = '''Knowledge Representation
-For the semantic's web-to-function, computers must
-have access to structured collections of information
-and sets of inference rules that they can use to
-conduct automated reasoning. Artificial-intelligence
-researchers have studied such systems since long
-before the Web was developed. Knowledge
-representation, as this technology is often called, is
-currently in a state comparable to that of hypertext
-before the advent of the Web: it is clearly a good
-idea, and some very nice demonstrations exist, but
-it has not yet changed the world. It contains the
-seeds of important applications, but to realize its full
-potential it must be linked into a single global
-system.'''
-
-
 def calculate_frequences(text: str) -> dict:
     """
     Calculates number of times each word appears in the text

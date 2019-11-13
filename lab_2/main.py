@@ -1,15 +1,15 @@
 """
 Labour work #2. Levenshtein distance.
 """
-word1 = 'life'
-word2 = 'death'
-add_val = 1
-rem_val = 2
-sub_val = 3
-path_to_csv_file = '../matrix.csv'
 
 
 def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
+    """
+    Generates a matrix
+    :param num_rows: number of rows, length of the original word + 1
+    :param num_cols: number of columns, length of the target word + 1
+    :return: generated matrix
+    """
     if not isinstance(num_rows, int):
         num_rows = 0
     if not isinstance(num_cols, int):
@@ -20,6 +20,13 @@ def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
 
 
 def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: int) -> list:
+    """
+    Initializes the matrix, fills in the first row & column
+    :param edit_matrix: the generalized matrix
+    :param add_weight: weight of the addition operation, user-defined
+    :param remove_weight: weight of the removal operation, user-defined
+    :return: initialized matrix
+    """
     if not isinstance(add_weight, int):
         add_weight = 0
     if not isinstance(remove_weight, int):
@@ -36,9 +43,14 @@ def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: i
 
 
 def minimum_value(numbers: tuple) -> int:
+    """
+    Checks if the numbers in the tuple are of int type and chooses the minimal one
+    :param numbers: a tuple of numbers
+    :return: the minimal number
+    """
     numbers = list(numbers)
-    for i in range(len(numbers)):
-        if not isinstance(numbers[i], int):
+    for i, num in enumerate(numbers):
+        if not isinstance(num, int):
             numbers[i] = -1
     return min(numbers)
 
@@ -49,6 +61,16 @@ def fill_edit_matrix(edit_matrix: tuple,
                      substitute_weight: int,
                      original_word: str,
                      target_word: str) -> list:
+    """
+    Fills the matrix according to the given operation weights
+    :param edit_matrix: the initialized matrix
+    :param add_weight:
+    :param remove_weight:
+    :param substitute_weight:
+    :param original_word:
+    :param target_word:
+    :return: filled matrix
+    """
     result_matrix = list(edit_matrix)
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return result_matrix
@@ -78,6 +100,15 @@ def find_distance(original_word: str,
                   add_weight: int,
                   remove_weight: int,
                   substitute_weight: int) -> int:
+    """
+    Counts the Levenshtein distance for two given words
+    :param original_word: user-defined
+    :param target_word: user-defined
+    :param add_weight: user-defined
+    :param remove_weight: user-defined
+    :param substitute_weight: user-defined
+    :return: the distance
+    """
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return -1
     if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
@@ -93,23 +124,34 @@ def find_distance(original_word: str,
                               substitute_weight,
                               original_word,
                               target_word)
-    save_to_csv(tuple(matrix), path_to_csv_file)
+    # save_to_csv(tuple(matrix), path_to_csv_file)
     return matrix[i][j]
 
 
 def save_to_csv(edit_matrix: tuple, path_to_file: str) -> None:
-    with open(path_to_file, 'w') as f:
+    """
+    Saves a matrix in csv format
+    :param edit_matrix:
+    :param path_to_file:
+    :return:
+    """
+    with open(path_to_file, 'w') as f_out:
         for row in edit_matrix:
-            f.write(','.join([str(element) for element in row]) + '\n')
+            f_out.write(','.join([str(element) for element in row]) + '\n')
 
 
 def load_from_csv(path_to_file: str) -> list:
+    """
+    Takes a matrix from a csv file
+    :param path_to_file:
+    :return: the matrix
+    """
     matrix = []
-    with open(path_to_file, 'r') as f:
-        row = f.readline()
+    with open(path_to_file, 'r') as f_in:
+        row = f_in.readline()
         while row != '':
             matrix += [[int(element) for element in row.split(',')]]
-            row = f.readline()
+            row = f_in.readline()
     return matrix
 
 
@@ -119,12 +161,22 @@ def describe_edits(edit_matrix: tuple,
                    add_weight: int,
                    remove_weight: int,
                    substitute_weight: int) -> list:
+    """
+    Gives an interpretation of editing operations
+    :param edit_matrix: the filled matrix for two words
+    :param original_word:
+    :param target_word:
+    :param add_weight:
+    :param remove_weight:
+    :param substitute_weight:
+    :return: a list of short descriptions of each operation
+    """
     description = []
-    if not isinstance(original_word, str) or not isinstance(target_word, str):
+    if not isinstance(original_word, str) or not isinstance(target_word, str) \
+            or len(edit_matrix) != (len(original_word) + 1) \
+            or len(edit_matrix[0]) != (len(target_word) + 1):
         return description
     if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
-        return description
-    if len(edit_matrix) != (len(original_word) + 1) or len(edit_matrix[0]) != (len(target_word) + 1):
         return description
     i, j = len(original_word), len(target_word)
     while i > 0 and j > 0:
@@ -155,8 +207,3 @@ def describe_edits(edit_matrix: tuple,
             description = ['remove {}'.format(original_word[i - 1])] + description
             i -= 1
     return description
-
-
-print(find_distance(word1, word2, add_val, rem_val, sub_val))
-# edited_matrix = tuple(load_from_csv(path_to_csv_file))
-# print(describe_edits(edited_matrix, word1, word2, add_val, rem_val, sub_val))
