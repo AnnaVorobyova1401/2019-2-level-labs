@@ -4,8 +4,8 @@ Labour work #2. Levenshtein distance.
 word1 = 'life'
 word2 = 'death'
 add_val = 1
-rem_val = 1
-sub_val = 2
+rem_val = 2
+sub_val = 3
 path_to_csv_file = '../matrix.csv'
 
 
@@ -16,8 +16,7 @@ def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
         num_cols = 0
     if num_rows < 1 or num_cols < 1:
         return []
-    else:
-        return [[0] * num_cols for row in range(num_rows)]
+    return [[0] * num_cols for row in range(num_rows)]
 
 
 def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: int) -> list:
@@ -53,13 +52,13 @@ def fill_edit_matrix(edit_matrix: tuple,
     result_matrix = list(edit_matrix)
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return result_matrix
-    elif not isinstance(add_weight, int) or add_weight < 0:
+    if not isinstance(add_weight, int) or add_weight < 0:
         return result_matrix
-    elif not isinstance(remove_weight, int) or remove_weight < 0:
+    if not isinstance(remove_weight, int) or remove_weight < 0:
         return result_matrix
-    elif not isinstance(substitute_weight, int) or substitute_weight < 0:
+    if not isinstance(substitute_weight, int) or substitute_weight < 0:
         return result_matrix
-    elif len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
+    if len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
         return result_matrix
     for i in range(1, len(result_matrix)):
         for j in range(1, len(result_matrix[0])):
@@ -81,7 +80,7 @@ def find_distance(original_word: str,
                   substitute_weight: int) -> int:
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return -1
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
         return -1
     i, j = len(original_word), len(target_word)
     matrix = generate_edit_matrix(i + 1, j + 1)
@@ -123,9 +122,9 @@ def describe_edits(edit_matrix: tuple,
     description = []
     if not isinstance(original_word, str) or not isinstance(target_word, str):
         return description
-    elif minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
+    if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
         return description
-    elif len(edit_matrix) != (len(original_word) + 1) or len(edit_matrix[0]) != (len(target_word) + 1):
+    if len(edit_matrix) != (len(original_word) + 1) or len(edit_matrix[0]) != (len(target_word) + 1):
         return description
     i, j = len(original_word), len(target_word)
     while i > 0 and j > 0:
