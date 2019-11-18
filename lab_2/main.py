@@ -98,6 +98,3 @@ def load_from_csv(path_to_file):
                     lis.append(elm)
             mtr.append(lis)
     return mtr
-
-save_to_csv([[1, 2, 3], [1, 2, 3]], 'new.csv')
-print(load_from_csv('new.csv'))
