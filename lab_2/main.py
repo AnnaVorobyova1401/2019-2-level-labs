@@ -15,7 +15,7 @@ def generate_edit_matrix(num_rows, num_cols):
 
 
 def initialize_edit_matrix(edit_matrix, add_weight, remove_weight):
-    if type(edit_matrix) != tuple or not edit_matrix or :
+    if type(edit_matrix) != tuple or not edit_matrix:
         return []
     if type(add_weight) != int or type(remove_weight) != int:
         return list(edit_matrix)
