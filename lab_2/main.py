@@ -7,16 +7,16 @@ def generate_edit_matrix(num_rows, num_cols):
     a = []
     m = []
     if type(num_rows) == int and type(num_cols) == int:
-        for i in range(num_cols):
-            a.append(0)
         for i in range(num_rows):
-            m.append(a)
+            for i in range(num_cols):
+                a.append(0)
+        m.append(a)
         print(m)
     return m
 
 
 def initialize_edit_matrix(edit_matrix, add_weight, remove_weight):
-    if type(edit_matrix) != tuple or not edit_matrix:
+    if type(edit_matrix) != tuple or not edit_matrix or edit_matrix.count([]) != 0:
         return []
     if type(add_weight) != int or type(remove_weight) != int:
         return list(edit_matrix)
@@ -98,3 +98,6 @@ def load_from_csv(path_to_file):
                     lis.append(elm)
             mtr.append(lis)
     return mtr
+
+save_to_csv([[1, 2, 3], [1, 2, 3]], 'new.csv')
+print(load_from_csv('new.csv'))
