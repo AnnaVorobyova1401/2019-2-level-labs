@@ -3,22 +3,23 @@ Labour work #2. Levenshtein distance.
 """
 
 
-def generate_edit_matrix(num_rows, num_cols):
-    a = []
+def generate_edit_matrix(num_rows, num_cols): 
     m = []
     if type(num_rows) == int and type(num_cols) == int:
         for i in range(num_rows):
+            a = []
             for i in range(num_cols):
                 a.append(0)
         m.append(a)
-        print(m)
     return m
 
 
 def initialize_edit_matrix(edit_matrix, add_weight, remove_weight):
-    if type(edit_matrix) != tuple or not edit_matrix or edit_matrix.count([]) != 0:
+    if type(edit_matrix) != tuple or not edit_matrix or :
         return []
     if type(add_weight) != int or type(remove_weight) != int:
+        return list(edit_matrix)
+    if edit_matrix.count([]) != 0:
         return list(edit_matrix)
 
     edit_matrix = list(edit_matrix)
@@ -44,6 +45,8 @@ def fill_edit_matrix(edit_matrix, add_weight, remove_weight, substitute_weight, 
     if type(add_weight) != int or type(remove_weight) != int or type(substitute_weight) != int:
         return list(edit_matrix)
     if type(original_word) != str or type(target_word) != str or not original_word or not target_word:
+        return list(edit_matrix)
+    if edit_matrix.count([]) != 0:
         return list(edit_matrix)
 
     original_word = ' ' + original_word
@@ -98,6 +101,3 @@ def load_from_csv(path_to_file):
                     lis.append(elm)
             mtr.append(lis)
     return mtr
-
-save_to_csv([[1, 2, 3], [1, 2, 3]], 'new.csv')
-print(load_from_csv('new.csv'))
