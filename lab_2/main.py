@@ -3,14 +3,13 @@ Labour work #2. Levenshtein distance.
 """
 
 
-def generate_edit_matrix(num_rows, num_cols): 
+def generate_edit_matrix(num_rows, num_cols):
     m = []
     if type(num_rows) == int and type(num_cols) == int:
         for i in range(num_rows):
-            a = []
-            for i in range(num_cols):
-                a.append(0)
-        m.append(a)
+            m.append([])
+            for j in range(num_cols):
+                m[i].append(0)
     return m
 
 
@@ -31,7 +30,7 @@ def initialize_edit_matrix(edit_matrix, add_weight, remove_weight):
 
     for i in range(1, length_2):
         edit_matrix[i][0] = edit_matrix[i - 1][0] + remove_weight
-
+        
     return edit_matrix
 
 
@@ -85,6 +84,7 @@ def save_to_csv(edit_martix: list, path_to_file: str):
                 f.write(str(elm) + ',')
             f.write('\n')
 
+
 def load_from_csv(path_to_file):
     if type(path_to_file) != str:
         return []
@@ -101,3 +101,5 @@ def load_from_csv(path_to_file):
                     lis.append(elm)
             mtr.append(lis)
     return mtr
+
+
