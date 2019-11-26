@@ -67,7 +67,7 @@ def fill_edit_matrix(edit_matrix, add_weight, remove_weight, substitute_weight, 
 def find_distance(original_word, target_word, add_weight, remove_weight, substitute_weight):
     if type(add_weight) != int or type(remove_weight) != int or type(substitute_weight) != int:
         return -1
-    if type(original_word) != str or type(target_word) != str or not original_word or not target_word:
+    if type(original_word) != str or type(target_word) != str:
         return -1
     m = generate_edit_matrix(len(original_word) + 1, len(target_word) + 1)
     m1 = initialize_edit_matrix(tuple(m), add_weight, remove_weight)
