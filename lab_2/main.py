@@ -5,7 +5,7 @@ Labour work #2. Levenshtein distance.
 
 def generate_edit_matrix(num_rows, num_cols):
     m = []
-    if type(num_rows) == int and type(num_cols) == int:
+    if num_rows.isinstance()  and num_cols.isinstance():
         for i in range(num_rows):
             m.append([])
             for j in range(num_cols):
@@ -16,7 +16,7 @@ def generate_edit_matrix(num_rows, num_cols):
 def initialize_edit_matrix(edit_matrix, add_weight, remove_weight):
     if type(edit_matrix) != tuple or not edit_matrix:
         return []
-    if type(add_weight) != int or type(remove_weight) != int:
+    if not add_weight.isinstance() or not remove_weight.isinstance():
         return list(edit_matrix)
     if edit_matrix.count([]) != 0:
         return list(edit_matrix)
@@ -41,9 +41,9 @@ def minimum_value(numbers):
 def fill_edit_matrix(edit_matrix, add_weight, remove_weight, substitute_weight, original_word, target_word):
     if type(edit_matrix) != tuple or not edit_matrix:
         return []
-    if type(add_weight) != int or type(remove_weight) != int or type(substitute_weight) != int:
+    if not add_weight.isinstance() or not remove_weight.isinstance() or not substitute_weight.isinstance():
         return list(edit_matrix)
-    if type(original_word) != str or type(target_word) != str or not original_word or not target_word:
+    if not original_word.isalpha() or not target_word.isalpha() or not original_word or not target_word:
         return list(edit_matrix)
     if edit_matrix.count([]) != 0:
         return list(edit_matrix)
@@ -53,21 +53,21 @@ def fill_edit_matrix(edit_matrix, add_weight, remove_weight, substitute_weight, 
 
     for i in range(1, len(original_word)):
         for j in range(1, len(target_word)):
-            l = edit_matrix[i - 1][j] + remove_weight
-            m = edit_matrix[i][j - 1] + add_weight
-            n = edit_matrix[i - 1][j - 1]
+            l_var = edit_matrix[i - 1][j] + remove_weight
+            m_var = edit_matrix[i][j - 1] + add_weight
+            n_var = edit_matrix[i - 1][j - 1]
             if original_word[i] != target_word[j]:
                 n += substitute_weight
-            num = (l, m, n)
+            num = (l_var, m_var, n_var)
             minimum = minimum_value(num)
             edit_matrix[i][j] = minimum
     return list(edit_matrix)
 
 
 def find_distance(original_word, target_word, add_weight, remove_weight, substitute_weight):
-    if type(add_weight) != int or type(remove_weight) != int or type(substitute_weight) != int:
+    if not add_weight.isinstance() or not remove_weight.isinstance() or not substitute_weight.isinstance():
         return -1
-    if type(original_word) != str or type(target_word) != str:
+    if not original_word.isalpha() or not target_word.isalpha():
         return -1
     m = generate_edit_matrix(len(original_word) + 1, len(target_word) + 1)
     m1 = initialize_edit_matrix(tuple(m), add_weight, remove_weight)
@@ -76,7 +76,7 @@ def find_distance(original_word, target_word, add_weight, remove_weight, substit
 
 
 def save_to_csv(edit_martix: list, path_to_file: str):
-    if type(edit_martix) != list or type(path_to_file) != str:
+    if type(edit_martix) != list or not path_to_file.isalpha():
         return None
     with open(path_to_file, 'w') as f:
         for i in edit_martix:
@@ -86,7 +86,7 @@ def save_to_csv(edit_martix: list, path_to_file: str):
 
 
 def load_from_csv(path_to_file):
-    if type(path_to_file) != str:
+    if not path_to_file.isalpha():
         return []
     with open(path_to_file, 'r') as f:
         m = f.readlines()
