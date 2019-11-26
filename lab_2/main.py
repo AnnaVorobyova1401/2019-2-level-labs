@@ -61,7 +61,7 @@ def fill_edit_matrix(edit_matrix, add_weight, remove_weight, substitute_weight, 
             num = (l, m, n)
             minimum = minimum_value(num)
             edit_matrix[i][j] = minimum
-    return edit_matrix
+    return list(edit_matrix)
 
 
 def find_distance(original_word, target_word, add_weight, remove_weight, substitute_weight):
