@@ -4,54 +4,29 @@ Labour work #2. Levenshtein distance.
 
 
 def generate_edit_matrix(num_rows: int, num_cols: int) -> list:
-    """
-    Generates a matrix
-    :param num_rows: number of rows, length of the original word + 1
-    :param num_cols: number of columns, length of the target word + 1
-    :return: generated matrix
-    """
-    if not isinstance(num_rows, int):
-        num_rows = 0
-    if not isinstance(num_cols, int):
-        num_cols = 0
-    if num_rows < 1 or num_cols < 1:
-        return []
-    return [[0] * num_cols for row in range(num_rows)]
+    edit_matrix = []
+    if isinstance(num_rows, int) and isinstance(num_cols, int):
+        for _ in range(num_rows):
+            edit_matrix.append([0] * num_cols)
+    return edit_matrix
 
 
 def initialize_edit_matrix(edit_matrix: tuple, add_weight: int, remove_weight: int) -> list:
-    """
-    Initializes the matrix, fills in the first row & column
-    :param edit_matrix: the generalized matrix
-    :param add_weight: weight of the addition operation, user-defined
-    :param remove_weight: weight of the removal operation, user-defined
-    :return: initialized matrix
-    """
-    if not isinstance(add_weight, int):
-        add_weight = 0
-    if not isinstance(remove_weight, int):
-        remove_weight = 0
-    result_matrix = list(edit_matrix)
-    if result_matrix == [] or result_matrix[0] == []:
-        return result_matrix
-    result_matrix[0][0] = 0
-    for i in range(1, len(result_matrix)):
-        result_matrix[i][0] = result_matrix[i - 1][0] + remove_weight
-    for j in range(1, len(result_matrix[0])):
-        result_matrix[0][j] = result_matrix[0][j - 1] + add_weight
-    return result_matrix
+    if not isinstance(edit_matrix, tuple) or not edit_matrix:
+        return []
+    edit_matrix = list(edit_matrix)
+    if not isinstance(add_weight, int) or not isinstance(remove_weight, int):
+        return edit_matrix
+    if edit_matrix == [[]] * len(edit_matrix):
+        return edit_matrix
+    for i in range(1, len(edit_matrix)):
+        edit_matrix[i][0] = edit_matrix[i - 1][0] + remove_weight
+    for j in range(1, len(edit_matrix[0])):
+        edit_matrix[0][j] = edit_matrix[0][j - 1] + add_weight
+    return edit_matrix
 
 
 def minimum_value(numbers: tuple) -> int:
-    """
-    Checks if the numbers in the tuple are of int type and chooses the minimal one
-    :param numbers: a tuple of numbers
-    :return: the minimal number
-    """
-    numbers = list(numbers)
-    for i, num in enumerate(numbers):
-        if not isinstance(num, int):
-            numbers[i] = -1
     return min(numbers)
 
 
@@ -61,38 +36,25 @@ def fill_edit_matrix(edit_matrix: tuple,
                      substitute_weight: int,
                      original_word: str,
                      target_word: str) -> list:
-    """
-    Fills the matrix according to the given operation weights
-    :param edit_matrix: the initialized matrix
-    :param add_weight:
-    :param remove_weight:
-    :param substitute_weight:
-    :param original_word:
-    :param target_word:
-    :return: filled matrix
-    """
-    result_matrix = list(edit_matrix)
-    if not isinstance(original_word, str) or not isinstance(target_word, str):
-        return result_matrix
-    if not isinstance(add_weight, int) or add_weight < 0:
-        return result_matrix
-    if not isinstance(remove_weight, int) or remove_weight < 0:
-        return result_matrix
-    if not isinstance(substitute_weight, int) or substitute_weight < 0:
-        return result_matrix
-    if len(result_matrix) != (len(original_word) + 1) or len(result_matrix[0]) != (len(target_word) + 1):
-        return result_matrix
-    for i in range(1, len(result_matrix)):
-        for j in range(1, len(result_matrix[0])):
-            if original_word[i - 1] != target_word[j - 1]:
-                result_matrix[i][j] = minimum_value((result_matrix[i - 1][j] + remove_weight,
-                                                    result_matrix[i][j - 1] + add_weight,
-                                                    result_matrix[i - 1][j - 1] + substitute_weight))
-            else:
-                result_matrix[i][j] = minimum_value((result_matrix[i - 1][j] + remove_weight,
-                                                    result_matrix[i][j - 1] + add_weight,
-                                                    result_matrix[i - 1][j - 1]))
-    return result_matrix
+    if not isinstance(edit_matrix, tuple):
+        return []
+    edit_matrix = list(edit_matrix)
+    if not isinstance(original_word, str) or not isinstance(target_word, str) or original_word == '' \
+            or target_word == '':
+        return edit_matrix
+    if not isinstance(add_weight, int) or not isinstance(remove_weight, int) or not isinstance(substitute_weight, int):
+        return edit_matrix
+    original_word = ' ' + original_word
+    target_word = ' ' + target_word
+    for i in range(1, len(edit_matrix)):
+        for j in range(1, len(edit_matrix[0])):
+            first_var = edit_matrix[i - 1][j] + remove_weight
+            second_var = edit_matrix[i][j - 1] + add_weight
+            third_var = edit_matrix[i - 1][j - 1]
+            if original_word[i] != target_word[j]:
+                third_var += substitute_weight
+            edit_matrix[i][j] = minimum_value((first_var, second_var, third_var))
+    return edit_matrix
 
 
 def find_distance(original_word: str,
@@ -100,110 +62,93 @@ def find_distance(original_word: str,
                   add_weight: int,
                   remove_weight: int,
                   substitute_weight: int) -> int:
-    """
-    Counts the Levenshtein distance for two given words
-    :param original_word: user-defined
-    :param target_word: user-defined
-    :param add_weight: user-defined
-    :param remove_weight: user-defined
-    :param substitute_weight: user-defined
-    :return: the distance
-    """
-    if not isinstance(original_word, str) or not isinstance(target_word, str):
+    if not isinstance(original_word, str) or not isinstance(target_word, str) or not isinstance(add_weight, int) \
+            or not isinstance(remove_weight, int) or not isinstance(substitute_weight, int):
         return -1
-    if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
-        return -1
-    i, j = len(original_word), len(target_word)
-    matrix = generate_edit_matrix(i + 1, j + 1)
-    matrix = initialize_edit_matrix(tuple(matrix),
-                                    add_weight,
-                                    remove_weight)
-    matrix = fill_edit_matrix(tuple(matrix),
-                              add_weight,
-                              remove_weight,
-                              substitute_weight,
-                              original_word,
-                              target_word)
-    # save_to_csv(tuple(matrix), path_to_csv_file)
-    return matrix[i][j]
+    rows = len(original_word) + 1
+    cols = len(target_word) + 1
+    edit_matrix = generate_edit_matrix(rows, cols)
+    initialized_matrix = initialize_edit_matrix(tuple(edit_matrix), add_weight, remove_weight)
+    full_matrix = fill_edit_matrix(tuple(initialized_matrix), add_weight, remove_weight, substitute_weight,
+                                   original_word, target_word)
+    return full_matrix[-1][-1]
 
 
-def save_to_csv(edit_matrix: tuple, path_to_file: str) -> None:
-    """
-    Saves a matrix in csv format
-    :param edit_matrix:
-    :param path_to_file:
-    :return:
-    """
-    with open(path_to_file, 'w') as f_out:
+def save_to_csv(edit_matrix: list, path_to_file: str) -> None:
+    if not isinstance(edit_matrix, list) or not isinstance(path_to_file, str):
+        return None
+    with open(path_to_file, "w") as file:
         for row in edit_matrix:
-            f_out.write(','.join([str(element) for element in row]) + '\n')
+            for element in row:
+                file.write(str(element))
+                if row.index(element) != len(row) - 1:
+                    file.write(',')
+            if edit_matrix.index(row) != len(edit_matrix) - 1:
+                file.write('\n')
+    return None
 
 
 def load_from_csv(path_to_file: str) -> list:
-    """
-    Takes a matrix from a csv file
-    :param path_to_file:
-    :return: the matrix
-    """
-    matrix = []
-    with open(path_to_file, 'r') as f_in:
-        row = f_in.readline()
-        while row != '':
-            matrix += [[int(element) for element in row.split(',')]]
-            row = f_in.readline()
+    if not isinstance(path_to_file, str):
+        return []
+    with open(path_to_file) as file:
+        matrix_from_file = file.readlines()
+        matrix = []
+        for element in matrix_from_file:
+            element = element.replace('\n', '')
+            numbers = element.split(',')
+            to_add = list(map(int, numbers))
+            matrix.append(to_add)
     return matrix
 
 
-def describe_edits(edit_matrix: tuple,
-                   original_word: str,
-                   target_word: str,
-                   add_weight: int,
-                   remove_weight: int,
+def search_for_path(matrix: list, ind_1: int, ind_2: int, number=0) -> int:
+    if not(ind_1 >= len(matrix) - 1 or ind_2 >= len(matrix[0]) - 1) and \
+            matrix[ind_1][ind_2] == matrix[ind_1 + 1][ind_2 + 1]:
+        number = search_for_path(matrix, ind_1 + 1, ind_2 + 1, number + 1)
+    return number
+
+
+def describe_edits(edit_matrix: tuple, original_word: str, target_word: str, add_weight: int, remove_weight: int,
                    substitute_weight: int) -> list:
-    """
-    Gives an interpretation of editing operations
-    :param edit_matrix: the filled matrix for two words
-    :param original_word:
-    :param target_word:
-    :param add_weight:
-    :param remove_weight:
-    :param substitute_weight:
-    :return: a list of short descriptions of each operation
-    """
-    description = []
-    if not isinstance(original_word, str) or not isinstance(target_word, str) \
-            or len(edit_matrix) != (len(original_word) + 1) \
-            or len(edit_matrix[0]) != (len(target_word) + 1):
-        return description
-    if minimum_value((add_weight, remove_weight, substitute_weight)) < 0:
-        return description
-    i, j = len(original_word), len(target_word)
-    while i > 0 and j > 0:
-        if original_word[i - 1] != target_word[j - 1]:
-            sub_step = edit_matrix[i - 1][j - 1] + substitute_weight
-            add_step = edit_matrix[i][j - 1] + add_weight
-            rem_step = edit_matrix[i - 1][j] + remove_weight
-            min_step = edit_matrix[i][j]
-            if sub_step == min_step:
-                description = ['substitute {} with {}'.format(original_word[i - 1], target_word[j - 1])] + description
-                i -= 1
-                j -= 1
-            elif add_step == min_step:
-                description = ['insert {}'.format(target_word[j - 1])] + description
-                j -= 1
-            elif rem_step == min_step:
-                description = ['remove {}'.format(original_word[i - 1])] + description
-                i -= 1
+    edits = []
+    edit_matrix = list(edit_matrix)
+    distance = find_distance(original_word, target_word, add_weight, remove_weight, substitute_weight)
+    row = 0
+    col = 0
+    for _ in range(distance):
+        var_1 = search_for_path(edit_matrix, row, col + 1)
+        var_2 = search_for_path(edit_matrix, row + 1, col)
+        if var_1 == var_2:
+            if (not edits or 'insert' in edits[-1]) and row != len(edit_matrix) - 1:
+                edits.append('remove ' + original_word[row])
+                row += 1
+            elif col != len(edit_matrix[0]) - 1:
+                edits.append('insert ' + target_word[col])
+                col += 1
+        elif var_1 > var_2:
+            edits.append('insert ' + target_word[col])
+            edits.append([])
+            col += var_1 + 1
+            row += var_1
         else:
-            i -= 1
-            j -= 1
-    if i == 0 and j != 0:
-        while j > 0:
-            description = ['insert {}'.format(target_word[j - 1])] + description
-            j -= 1
-    elif i != 0 and j == 0:
-        while i > 0:
-            description = ['remove {}'.format(original_word[i - 1])] + description
-            i -= 1
-    return description
+            edits.append('remove ' + original_word[row])
+            edits.append([])
+            row += var_2 + 1
+            col += var_2
+    return edits
+
+
+def create_edits_with_subs(edits: tuple) -> list:
+    edits_with_subs = []
+    if isinstance(edits, tuple):
+        flag = 1
+        for ind, edit in enumerate(edits):
+            if ind != len(edits) - 1 and 'remove' in edit and 'insert' in edits[ind + 1]:
+                edits_with_subs.append('substitute {} with {}'.format(edit[-1], edits[ind + 1][-1]))
+                flag = 0
+            elif not flag:
+                flag = 1
+            elif edit:
+                edits_with_subs.append(edit)
+    return edits_with_subs
