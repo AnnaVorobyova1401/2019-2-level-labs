@@ -29,9 +29,9 @@ class WordStorage:
     def get_id_of(self, word: str) -> int:
         return self.storage.get(word, -1)
 
-    def get_original_by(self, id: int) -> str:
-        if id in self.storage.values():
-            return [key for key, value in self.storage.items() if value == id][0]
+    def get_original_by(self, word_id: int) -> str:
+        if word_id in self.storage.values():
+            return [key for key, value in self.storage.items() if value == word_id][0]
         return 'UNK'
 
     def from_corpus(self, corpus: tuple):
@@ -67,11 +67,11 @@ class NGramTrie:
 
     def calculate_log_probabilities(self):
         for gram in self.gram_frequencies:
-            sum = 0
-            for g in self.gram_frequencies:
-                if gram[:-1] == g[:-1]:
-                    sum += self.gram_frequencies[g]
-            self.gram_log_probabilities[gram] = math.log(self.gram_frequencies[gram] / sum)
+            prob_sum = 0
+            for base_gram in self.gram_frequencies:
+                if gram[:-1] == base_gram[:-1]:
+                    prob_sum += self.gram_frequencies[base_gram]
+            self.gram_log_probabilities[gram] = math.log(self.gram_frequencies[gram] / prob_sum)
 
     def predict_next_sentence(self, prefix: tuple) -> list:
         if not isinstance(prefix, tuple):
@@ -119,11 +119,11 @@ def split_by_sentence(text: str) -> list:
         if not text[i].isupper():
             i += 1
             continue
-        t = i
-        while t < end_of_text and text[t] not in '.!?':
-            t += 1
-        if t < end_of_text and text[t] in '.!?':
-            temp_list = text[i: t].split('\n')
+        str_end = i
+        while str_end < end_of_text and text[str_end] not in '.!?':
+            str_end += 1
+        if str_end < end_of_text and text[str_end] in '.!?':
+            temp_list = text[i: str_end].split('\n')
             temp_str = ' '.join(temp_list)
             sentence = [sym for sym in temp_str]
             for num, sym in enumerate(sentence):
@@ -140,7 +140,7 @@ def split_by_sentence(text: str) -> list:
                     continue
                 num += 1
             result += [['<s>'] + ''.join(sentence).split(' ') + ['</s>']]
-            i = t + 1
+            i = str_end + 1
         else:
             i += 1
     return result
