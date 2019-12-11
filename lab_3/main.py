@@ -1,10 +1,11 @@
-"""
 Labour work #3
+"""
  Building an own N-gram model
 """
 
 import math
 import random
+from typing import List, Any
 
 REFERENCE_TEXT = ''
 if __name__ == '__main__':
@@ -13,7 +14,7 @@ if __name__ == '__main__':
 
 
 class WordStorage:
-    
+
     def __init__(self):
         self.storage = {}
 
@@ -25,19 +26,21 @@ class WordStorage:
             return num
 
     def get_id_of(self, word: str) -> int:
-        if word in self.storage:
-            return self.storage.get(word)
+        identif = self.storage.get(word, -1)
+        return identif
 
     def get_original_by(self, word_id: int) -> str:
-        if word_id in self.storage.keys():
-            return self.storage.pop(word_id)
+        if isinstance(word_id, int):
+            for key, value in self.storage.items():
+                if word_id == value:
+                    return key
+        return "UNK"
 
     def from_corpus(self, corpus: tuple):
         if corpus and isinstance(corpus, tuple):
             for word in corpus:
                 num = random.randint(1, 10000000)
                 self.storage[word] = num
-
             return self.storage
 
 
@@ -51,15 +54,14 @@ class NGramTrie:
     def fill_from_sentence(self, sentence: tuple) -> str:
         try:
             if isinstance(sentence, tuple):
-                sentence = list(sentence)
-            for index, element in enumerate(sentence):
-                bi_gram = element, sentence[index + 1]
-                self.bg_storage.append(bi_gram)
-            for bi_gram in self.bg_storage:
-                num = self.bg_storage.count(bi_gram)
-                self.gram_frequencies[bi_gram] = num
+                for index, element in enumerate(sentence):
+                    bi_gram = (element, sentence[index + 1])
+                    if bi_gram in self.gram_frequencies.keys():
+                        self.gram_frequencies[bi_gram] += 1
+                    else:
+                        self.gram_frequencies[bi_gram] = 1
             return "OK"
-        except AssertionError:
+        except (IndexError, TypeError):
             return "ERROR"
 
     def calculate_log_probabilities(self):
@@ -71,51 +73,74 @@ class NGramTrie:
                     probability = freq / sum_of_freq
                     final_probability = math.log(probability)
                     self.gram_log_probabilities[bi_gram] = final_probability
+        return self.gram_log_probabilities
 
     def predict_next_sentence(self, prefix: tuple) -> list:
         if not prefix or not isinstance(prefix, tuple):
             return []
+
         if len(prefix) != self.size - 1:
             return []
 
-        prefix = list(prefix)
-        
+        prediction = list(prefix)
+        probability_lst = []
+        for bi_gram in self.gram_log_probabilities.keys():
+            if bi_gram[:-1] == prefix:
+                probability_lst.append(self.gram_log_probabilities[bi_gram])
 
-alf = 'QWERTYUIOPASDFGHJKLZXCVBNM'
-signs = '!@#$%^&*,/'
+        if probability_lst == []:
+            return prediction
+
+        next_w = max(probability_lst)
+        for word, probability in self.gram_log_probabilities.items():
+            if next_w == probability:
+                next_w = word[-1]
+        prediction.append(next_w)
+
+        new_prefix = prediction[0:]
+        prefix = tuple(new_prefix)
+        for bi_gram in self.gram_log_probabilities.keys():
+            if bi_gram[:-1] == prefix:
+                return self.predict_next_sentence(prefix)
+            return prediction
+
+
+
 
 
 def split_by_sentence(text: str) -> list:
-    for elm in text:
-        for al in elm:
-            if al in signs and al != '.':
-                text = text.replace(al, '')
+    if not text or not isinstance(text, str):
+        return []
 
-    text = text.replace('\n', " ")
+    text = text.lower()
+    for elm in text:
+        if elm == "?" or elm == "!":
+            text = text.replace(elm, ".")
+
+    text = text.replace("\n", " ")
     while "  " in text:
         text = text.replace("  ", " ")
-    words = text.split(" ")
-    while "" in words:
-        words.remove("")
 
-    new_text_1 = []
-    start = 0
-    for i in range(len(text)):
-        if text[i] == '.' and text[i + 1] == ' ' and text[i + 2] in alf:
-            new_text_1.append(text[start: i])
-            start = i + 3
-            print(new_text_1)
+    new_text = ""
+    for element in text:
+        if element.isalpha() or element == ' ' or element == '.':
+            new_text += element
+    sentences = new_text.split('.')
 
-    new_text_2 = []
-    for elm in new_text_1:
-        new_text_2.append('<s> ' + elm + ' </s>')
-    print(new_text_2)
+    if '.' not in text:
+        return []
 
-    new_text = []
-    for elm in new_text_2:
-        new_text.append(elm.split(' '))
-
-    return new_text
+    res = []
+    for sent in sentences:
+        new = ["<s>"]
+        if sent != '':
+            sent = sent.split()
+            for word in sent:
+                if word != "":
+                    new.append(word)
+            new.append("</s>")
+            res.append(new)
+    return res
 
 
 def encode(storage_instance, corpus) -> list:
@@ -129,7 +154,3 @@ def encode(storage_instance, corpus) -> list:
         code_sentences += [code_sentence]
 
     return code_sentences
-
-
-split_by_sentence('''Mary wa$nted, to swim!
-                  #However, she was afraid of sharks.''')
