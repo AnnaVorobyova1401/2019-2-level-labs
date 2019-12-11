@@ -1,4 +1,4 @@
-Labour work #3
+# Labour work #3
 """
  Building an own N-gram model
 """
@@ -91,10 +91,10 @@ class NGramTrie:
         if probability_lst == []:
             return prediction
 
-        next_w = max(probability_lst)
-        for word, probability in self.gram_log_probabilities.items():
-            if next_w == probability:
-                next_w = word[-1]
+        max_probabl = max(probability_lst)
+        for bi_gram, probability in self.gram_log_probabilities.items():
+            if max_probabl == probability:
+                next_w = bi_gram[-1]
         prediction.append(next_w)
 
         new_prefix = prediction[0:]
