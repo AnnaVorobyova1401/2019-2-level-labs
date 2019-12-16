@@ -101,6 +101,7 @@ class TfIdfCalculator:
                 rating += 1
             if one_word == word:
                 return max_tf_idf_value, rating
+        return ()
 
     def dump_report_csv(self):
         report_file = open('report.csv', 'w')
