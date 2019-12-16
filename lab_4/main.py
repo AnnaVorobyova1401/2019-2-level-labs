@@ -86,9 +86,7 @@ class TfIdfCalculator:
             return result
         if document_index > len(self.tf_idf_values) or document_index < 0:
             return result
-        if word not in self.tf_idf_values[document_index]:
-            return result
-        if not word.isalpha() or not word.islower():
+        if word not in self.tf_idf_values[document_index] or not word.isalpha() or not word.islower():
             return result
         sorted_by_tf_idf = sorted(self.tf_idf_values[document_index],
                                   key=lambda x: self.tf_idf_values[document_index][x],
@@ -165,8 +163,8 @@ class TfIdfCalculator:
 
 
 if __name__ == '__main__':
-    texts = ['5_7.txt', '15_2.txt', '10547_3.txt', '12230_7.txt', 'test.txt']
-    for text in texts:
+    TEXTS = ['5_7.txt', '15_2.txt', '10547_3.txt', '12230_7.txt', 'test.txt']
+    for text in TEXTS:
         with open(text, 'r') as f:
             REFERENCE_TEXTS.append(f.read())
     # scenario to check your work
